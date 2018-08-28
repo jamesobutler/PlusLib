@@ -1,0 +1,54 @@
+/*!
+\page DeviceCapistrano WinProbe Corporation UltraVision ultrasound systems
+
+\section WinProbeSupportedHwDevices Supported hardware devices
+
+- This device is used for image acquisition from WinProbe UltraVision ultrasound
+  systems.
+- Link to manufacturer's website: http://www.winprobe.com/
+
+\section WinProbeSupportedPlatforms Supported platforms
+
+- \ref PackageWin32
+- \ref PackageWin64
+
+\section WinProbeInstallation Installation
+
+- Requires SDK provided by WinProbe for compilation.
+- If not using the UltraVision laptop, UltraVision 2 drivers provided by WinProbe are required.
+- If not using the UltraVision laptop, a Thunderbolt 2 connection is required for connecting the board.
+
+\section WinProbeConfigSettings Device configuration settings
+
+- \xmlAtt \ref DeviceType "Type" = \c "WinProbeVideo" \RequiredAtt
+- \xmlAtt \ref DeviceAcquisitionRate "AcquisitionRate" \OptionalAtt{30}
+- \xmlAtt \ref LocalTimeOffsetSec \OptionalAtt{0}
+
+- \xmlAtt \b TransducerID ID of the tranducer that will be used. IDs can be found in Transducers.xml of the WinProbe SDK.
+- \xmlAtt \b TimeGainCompensation
+- \xmlAtt \b FocalPointDepth
+- \xmlAtt \b LogLinearKnee
+- \xmlAtt \b MaxValue
+- \xmlAtt \b MinValue
+- \xmlAtt \b LogMax
+- \xmlAtt \b TxTxFrequency
+- \xmlAtt \b SSDepth
+- \xmlAtt \b Voltage
+
+- \xmlElem \ref DataSources Exactly one \c DataSource child element is required \RequiredAtt
+   - \xmlElem \ref DataSource \RequiredAtt
+    - \xmlAtt \ref PortName \RequiredAtt
+          - \c B B-mode image data
+          - \c Rf RF data
+    - \xmlAtt \ref PortUsImageOrientation \RequiredAtt
+    - \xmlAtt \ref ImageType Supported imaging modes: B-mode \OptionalAtt{BRIGHTNESS}
+    - \xmlAtt \ref BufferSize \OptionalAtt{150}
+    - \xmlAtt \ref AveragedItemsForFiltering \OptionalAtt{20}
+    - \xmlAtt \ref ClipRectangleOrigin \OptionalAtt{0 0 0}
+    - \xmlAtt \ref ClipRectangleSize \OptionalAtt{0 0 0}
+
+\section WinProbeExampleConfigFile Example configuration file PlusDeviceSet_Server_WinProbe.xml
+
+\include "ConfigFiles/Testing/PlusDeviceSet_Server_WinProbe.xml"
+
+*/
