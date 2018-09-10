@@ -172,6 +172,8 @@ PlusServerRemoteControl.exe --command=GET_EXAM_DATA --device=StealthLinkDevice -
 
 PlusServer can change and retrieve ultrasound imaging parameters over OpenIGTLink using the SetUSParameter and GetUsParameter commands.
 
+\ref USImagingParameters
+
 \subsubsection PlusServerCommandsUltrasoundParameterCommands Commands
 
 - SetUsParameter: sets the imaging parameters of the specified ultrasound device
