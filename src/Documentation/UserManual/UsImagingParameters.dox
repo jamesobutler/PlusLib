@@ -3,13 +3,14 @@
 
 \section UsImagingParametersDetails US imaging parameters
 
-An ultrasound imaging parameters element inside of a device tag is detected and loaded for specific devices. 
+An ultrasound imaging parameters element inside of a device tag is detected and loaded for specific devices.
 
 \section UsImagingParametersDevices Supported devices
 
-Current devices include 
+Current devices include
  - \ref DeviceSonixVideo
  - \ref DeviceInterson devices.
+ - \ref DeviceCapistrano
 
 \section UsImagingParametersConfigSettings Device configuration settings
 
