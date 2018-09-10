@@ -1806,93 +1806,223 @@ PlusStatus vtkPlusCapistranoVideoSource::GetProbeNameDevice(std::string& probeNa
   return PLUS_SUCCESS;
 }
 
+// //----------------------------------------------------------------------------
+// PlusStatus vtkPlusCapistranoVideoSource::SetNewImagingParametersDevice(const vtkPlusUsImagingParameters& newImagingParameters)
+// {
+//   if (this->Internal->ImagingParameters->DeepCopy(newImagingParameters) == PLUS_FAIL)
+//   {
+//     LOG_ERROR("Unable to deep copy new imaging parameters.");
+//     return PLUS_FAIL;
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_DEPTH))
+//   {
+//     if (this->SetDepthMmDevice(float(this->Internal->ImagingParameters->GetDepthMm()) / 10.0f) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_FREQUENCY))
+//   {
+//     if (this->SetPulseFrequency(this->Internal->ImagingParameters->GetFrequencyMhz()) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_TGC))
+//   {
+//     std::vector<double> tgcVec;
+//     this->Internal->ImagingParameters->GetTimeGainCompensation(tgcVec);
+//     double tgc[3] = {tgcVec[0], tgcVec[1], tgcVec[2]};
+
+//     if (this->SetGainPercent(tgc) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_IMAGESIZE))
+//   {
+//     FrameSizeType imageSizeVec;
+//     this->Internal->ImagingParameters->GetImageSize(imageSizeVec);
+
+//     if (this->SetImageSize(imageSizeVec) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_INTENSITY))
+//   {
+//     if (this->SetIntensity(this->Internal->ImagingParameters->GetIntensity()) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_CONTRAST))
+//   {
+//     if (this->SetContrast(this->Internal->ImagingParameters->GetContrast()) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_ZOOM))
+//   {
+//     if (this->SetZoomFactor(this->Internal->ImagingParameters->GetZoomFactor()) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_SOUNDVELOCITY))
+//   {
+//     if (this->SetSoundVelocity(this->Internal->ImagingParameters->GetSoundVelocity()) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_VOLTAGE))
+//   {
+//     if (this->SetPulseVoltage(this->Internal->ImagingParameters->GetProbeVoltage()) == PLUS_FAIL)
+//     {
+//       return PLUS_FAIL;
+//     }
+//   }
+
+//   return this->InitializeCapistranoVideoSource(true);
+// }
 //----------------------------------------------------------------------------
-PlusStatus vtkPlusCapistranoVideoSource::SetNewImagingParametersDevice(const vtkPlusUsImagingParameters& newImagingParameters)
+PlusStatus vtkPlusCapistranoVideoSource::InternalApplyImagingParameterChange()
 {
-  if (this->Internal->ImagingParameters->DeepCopy(newImagingParameters) == PLUS_FAIL)
-  {
-    LOG_ERROR("Unable to deep copy new imaging parameters.");
-    return PLUS_FAIL;
-  }
+  PlusStatus status = PLUS_SUCCESS;
 
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_DEPTH))
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_FREQUENCY)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_FREQUENCY))
   {
-    if (this->SetDepthMmDevice(float(this->Internal->ImagingParameters->GetDepthMm()) / 10.0f) == PLUS_FAIL)
+    if (this->SetPulseFrequency(this->ImagingParameters->GetFrequencyMhz()) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+      this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_FREQUENCY, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set frequency imaging parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_FREQUENCY))
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_DEPTH)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_DEPTH))
   {
-    if (this->SetPulseFrequency(this->Internal->ImagingParameters->GetFrequencyMhz()) == PLUS_FAIL)
+    if (this->SetDepthMmDevice(this->ImagingParameters->GetDepthMm()) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+      this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_DEPTH, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set depth imaging parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_TGC))
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_TGC)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_TGC))
   {
     std::vector<double> tgcVec;
-    this->Internal->ImagingParameters->GetTimeGainCompensation(tgcVec);
-    double tgc[3] = {tgcVec[0], tgcVec[1], tgcVec[2]};
+    this->ImagingParameters->GetTimeGainCompensation(tgcVec);
+    double tgc[3] = { tgcVec[0], tgcVec[1], tgcVec[2] };
 
-    if (this->SetGainPercent(tgc) == PLUS_FAIL)
+    if (this->SetGainPercent(tgc) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+      this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_TGC, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set time gain compensation parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_IMAGESIZE))
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_INTENSITY)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_INTENSITY))
   {
-    FrameSizeType imageSizeVec;
-    this->Internal->ImagingParameters->GetImageSize(imageSizeVec);
-
-    if (this->SetImageSize(imageSizeVec) == PLUS_FAIL)
+    if (this->SetIntensity(this->ImagingParameters->GetIntensity()) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+      this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_INTENSITY, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set intensity parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_INTENSITY))
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_CONTRAST)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_CONTRAST))
   {
-    if (this->SetIntensity(this->Internal->ImagingParameters->GetIntensity()) == PLUS_FAIL)
+    if (this->SetContrast(this->ImagingParameters->GetContrast()) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+      this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_CONTRAST, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set contrast parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_CONTRAST))
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_ZOOM)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_ZOOM))
   {
-    if (this->SetContrast(this->Internal->ImagingParameters->GetContrast()) == PLUS_FAIL)
+    if (this->SetDisplayZoomDevice(this->ImagingParameters->GetZoomFactor()) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+       this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_ZOOM, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set zoom parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_ZOOM))
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_SOUNDVELOCITY)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_SOUNDVELOCITY))
   {
-    if (this->SetZoomFactor(this->Internal->ImagingParameters->GetZoomFactor()) == PLUS_FAIL)
+    if (this->SetSoundVelocity(this->ImagingParameters->GetSoundVelocity()) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+      this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_SOUNDVELOCITY, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set sound velocity parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_SOUNDVELOCITY))
+  return status;
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_VOLTAGE)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_VOLTAGE))
   {
-    if (this->SetSoundVelocity(this->Internal->ImagingParameters->GetSoundVelocity()) == PLUS_FAIL)
+    if (this->SetPulseVoltage(this->ImagingParameters->GetProbeVoltage()) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+      this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_VOLTAGE, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set pulse voltage parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  if (this->Internal->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_VOLTAGE))
+  return status;
+  if (this->ImagingParameters->IsSet(vtkPlusUsImagingParameters::KEY_IMAGESIZE)
+    && this->ImagingParameters->IsPending(vtkPlusUsImagingParameters::KEY_IMAGESIZE))
   {
-    if (this->SetPulseVoltage(this->Internal->ImagingParameters->GetProbeVoltage()) == PLUS_FAIL)
+    if (this->SetImageSize(this->ImagingParameters->GetImageSize()) == PLUS_SUCCESS)
     {
-      return PLUS_FAIL;
+      this->ImagingParameters->SetPending(vtkPlusUsImagingParameters::KEY_IMAGESIZE, false);
+    }
+    else
+    {
+      LOG_ERROR("Failed to set image size parameter");
+      status = PLUS_FAIL;
     }
   }
-
-  return this->InitializeCapistranoVideoSource(true);
+  return status;
 }

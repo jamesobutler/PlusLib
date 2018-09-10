@@ -25,7 +25,7 @@ class vtkPlusDataCollectionExport vtkPlusCapistranoVideoSource: public vtkPlusUs
 public:
   /*! Constructor for a smart pointer of this class*/
   static vtkPlusCapistranoVideoSource* New();
-  vtkTypeMacro(vtkPlusCapistranoVideoSource, vtkPlusDevice);
+  vtkTypeMacro(vtkPlusCapistranoVideoSource, vtkPlusUsDevice);
   virtual void PrintSelf(ostream& os, vtkIndent indent) VTK_OVERRIDE;
 
   /*! Specify the device connected to this class */
@@ -171,6 +171,9 @@ public:
 
   /* Apply a completely new set of imaging parameters to the device */
   PlusStatus SetNewImagingParametersDevice(const vtkPlusUsImagingParameters& newImagingParameters);
+
+  /*! Set changed imaging parameter to device */
+  virtual PlusStatus InternalApplyImagingParameterChange();
 
   /*! Set Current Pixel Spacing values Of US Image (mm) */
   vtkSetVector3Macro(CurrentPixelSpacingMm, double);
