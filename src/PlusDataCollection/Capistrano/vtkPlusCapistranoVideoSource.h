@@ -254,6 +254,21 @@ protected:
   /* Update US Scan depth with a given clockdivider */
   PlusStatus UpdateDepthMode(int clockdivider);
 
+  /*! Represents the depth, in pixels, the display window will be. This defaults to 512 pixels for newly initialized probes.*/
+  PlusStatus SetWindowDepthDevice(int height);
+  /*! Set the probe depth in mm */
+  PlusStatus SetDepthMmDevice(double depthMm);
+  /*! Set the desired probe frequency in Hz. The resulting probe speed will be approximately the value specified */
+  PlusStatus SetFrequencyMhzDevice(float aFreq);
+  /*! Set the sound velocity in the device */
+  PlusStatus SetSoundVelocityDevice(double velocity);
+  /*! Set the gain in percent in the device */
+  PlusStatus SetTimeGainCompensationPercentDevice(double gainPercent[3]);
+  /*! Set the zoom factor in the device. */
+  PlusStatus SetZoomFactorDevice(float zoomFactor);
+  /*! Set the lookup table from intensity and contrast */
+  PlusStatus SetLookupTableDevice(double intensity, double contrast);
+
   /* Update US Sample frequency */
   PlusStatus GetSampleFrequencyDevice(float& aFreq);
 
