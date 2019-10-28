@@ -249,8 +249,8 @@ protected:
   double m_TimestampOffset = 0; //difference between program start time and latest internal timer restart
   double first_timestamp = 0;
   double m_LastTimestamp = 1000; //used to determine timer restarts and to update timestamp offset
-  unsigned m_LineCount = 128;
-  unsigned m_SamplesPerLine = 0;
+  FrameSizeType m_PrimaryFrameSize = { 128, 256, 1 };
+  FrameSizeType m_ExtraFrameSize = { 128, 256, 1 };
   std::vector<uint8_t> m_PrimaryBuffer;
   std::vector<uint8_t> m_ExtraBuffer;
   bool m_UseDeviceFrameReconstruction = true;
@@ -268,7 +268,6 @@ protected:
   int32_t m_BMultiTxCount = 1;
   int32_t m_MPRF = 100;
   int32_t m_MLineIndex = 60;
-  int32_t m_MWidth = 256;
   int32_t m_MAcousticLineCount = 0;
   int32_t m_MDepth = 0;
   uint8_t m_SSDecimation = 2;
