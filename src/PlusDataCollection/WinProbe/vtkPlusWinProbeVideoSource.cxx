@@ -1420,3 +1420,13 @@ int32_t vtkPlusWinProbeVideoSource::GetBFrameRateLimit()
   }
   return m_BFrameRateLimit;
 }
+
+//----------------------------------------------------------------------------
+void vtkPlusWinProbeVideoSource::SelectProbe(unsigned char probeIndex)
+{
+  if (Connected)
+  {
+    ::SelectProbe(probeIndex)
+  }
+  return PLUS_SUCCESS;
+}

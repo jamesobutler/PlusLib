@@ -173,6 +173,8 @@ public:
 
   int GetTransducerInternalID();
 
+  void SelectProbe(unsigned char probeIndex)
+
   enum class Mode
   {
     B = 0, // only B mode
