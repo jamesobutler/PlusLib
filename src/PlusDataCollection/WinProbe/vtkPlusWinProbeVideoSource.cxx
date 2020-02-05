@@ -690,8 +690,8 @@ vtkPlusWinProbeVideoSource::~vtkPlusWinProbeVideoSource()
   {
     this->Disconnect();
   }
-  WPDispose();
   WPDXDispose();
+  WPDispose();
 }
 
 // ----------------------------------------------------------------------------
