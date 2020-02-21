@@ -331,7 +331,17 @@ void vtkPlusWinProbeVideoSource::FrameCallback(int length, char* data, char* hHe
   }
   else if(usMode & ARFI)
   {
-    frameSize[0] = arfiGeometry->SamplesPerLine * arfiGeometry->LineCount * arfiGeometry->LineRepeatCount * 30;
+    int bSize = m_SSDecimation * m_PrimaryFrameSize[1] * m_PrimaryFrameSize[0];
+    int timeblock = (4 / quadBFCount) * arfiGeometry->LineRepeatCount * sizeof(int32_t) * 30;
+    timeblock = timeblock / 2;  // for x8 bf engine? why isn't quadBFCount taking this into account?
+    int arfiDataSize = arfiGeometry->SamplesPerLine * arfiGeometry->LineCount * arfiGeometry->LineRepeatCount * 30 * sizeof(int32_t);
+    if(length > bSize + arfiDataSize + timeblock){
+      LOG_WARNING("The size of the ARFI frame data is larger than expected.");
+    }
+    else if(length < bSize + arfiDataSize + timeblock){
+      LOG_WARNING("The size of the ARFI frame data is smaller than expected.");
+    }
+    frameSize[0] = (length - bSize) / sizeof(int32_t);  // we want to include the time data to be saved
     frameSize[1] = 1;
     frameSize[2] = 1;
     if(frameSize != m_ExtraFrameSize)
@@ -507,16 +517,12 @@ void vtkPlusWinProbeVideoSource::FrameCallback(int length, char* data, char* hHe
   {
     for(unsigned i = 0; i < m_ExtraSources.size(); i++)
     {
-      int bSize = m_SSDecimation * m_PrimaryFrameSize[1] * m_PrimaryFrameSize[0];
-      // int timeblock = (4 / quadBFCount) * arfiGeometry->LineRepeatCount * sizeof(int32_t) * 30;
-      // timeblock = timeblock / 2;  // for x8 bf engine? why isn't quadBFCount taking this into account?
-      // assert(length == bSize + frameSize[0] * frameSize[1] * frameSize[2] * sizeof(int32_t) + timeblock);
-
-      // send the ARFI data as one long 2D frame to be processed downstream (1024 * 16 * 64 * 30)x1
+      // send the ARFI data as one long 2D frame to be processed downstream
       int32_t* tempData;
       // need to spoof the timestamps since the arfi data comes a few seconds after the push
       double currentTime = vtkIGSIOAccurateTimer::GetSystemTime();
 
+      int bSize = m_SSDecimation * m_PrimaryFrameSize[1] * m_PrimaryFrameSize[0];
       tempData = reinterpret_cast<int32_t*>(data + bSize);
       if(m_ExtraSources[i]->AddItem(tempData,
                                     US_IMG_ORIENT_FM,
@@ -1513,7 +1519,7 @@ void vtkPlusWinProbeVideoSource::SetARFIEnabled(bool value)
     if(value)
     {
       m_Mode = Mode::ARFI;
-      m_ExtraFrameSize = { 1024 * 16 * 64 * 30, 1, 1 };
+      m_ExtraFrameSize = { 1024 * 16 * 64 * 30 + (4 / 2) * 64 * 30, 1, 1 };
       this->AdjustBufferSizes();
       std::vector<int32_t> zeroData(m_ExtraFrameSize[0] * m_ExtraFrameSize[1] * m_ExtraFrameSize[2], 0);
       // add a fake zero-filled frame immediately, because the first frame seems to get lost somehow
