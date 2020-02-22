@@ -256,7 +256,7 @@ protected:
   double first_timestamp = 0;
   double m_LastTimestamp = 1000; //used to determine timer restarts and to update timestamp offset
   FrameSizeType m_PrimaryFrameSize = { 128, 256, 1 };
-  FrameSizeType m_ExtraFrameSize = { 128, 256, 1 };
+  FrameSizeType m_ExtraFrameSize = { 256, 128, 1 };
   std::vector<uint8_t> m_PrimaryBuffer;
   std::vector<uint8_t> m_ExtraBuffer;
   bool m_UseDeviceFrameReconstruction = true;

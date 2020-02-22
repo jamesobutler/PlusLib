@@ -95,7 +95,7 @@ PlusStatus vtkPlusWinProbeVideoSource::ReadConfiguration(vtkXMLDataElement* root
       int mwidthSeconds = std::stoi(mwidthSeconds_string);
       if(mwidthSeconds > 0)
       {
-        m_ExtraFrameSize[1] = this->MWidthFromSeconds(mwidthSeconds); // [0] or [1]?
+        m_ExtraFrameSize[0] = this->MWidthFromSeconds(mwidthSeconds);
       }
     }
   }
@@ -122,8 +122,8 @@ PlusStatus vtkPlusWinProbeVideoSource::WriteConfiguration(vtkXMLDataElement* roo
   deviceConfig->SetIntAttribute("SpatialCompoundCount", this->GetSpatialCompoundCount());
   deviceConfig->SetIntAttribute("MPRFrequency", this->GetMPRFrequency());
   deviceConfig->SetIntAttribute("MLineIndex", this->GetMLineIndex());
-  deviceConfig->SetIntAttribute("MWidth", this->MSecondsFromWidth(this->m_ExtraFrameSize[1]));
-  deviceConfig->SetIntAttribute("MWidthLines", this->m_ExtraFrameSize[1]);
+  deviceConfig->SetIntAttribute("MWidth", this->MSecondsFromWidth(this->m_ExtraFrameSize[0]));
+  deviceConfig->SetIntAttribute("MWidthLines", this->m_ExtraFrameSize[0]);
   deviceConfig->SetIntAttribute("MAcousticLineCount", this->GetMAcousticLineCount());
   deviceConfig->SetIntAttribute("MDepth", this->GetMDepth());
   deviceConfig->SetUnsignedLongAttribute("Voltage", this->GetVoltage());
@@ -361,11 +361,11 @@ void vtkPlusWinProbeVideoSource::FrameCallback(int length, char* data, char* hHe
   {
     frameSize[0] = brfGeometry->SamplesPerLine * brfGeometry->Decimation;
     frameSize[1] = brfGeometry->LineCount;
-    if(frameSize != m_ExtraFrameSize)
+    if(frameSize != m_ExtraSources[0]->GetInputFrameSize())
     {
       LOG_INFO("Rf frame size updated. Adjusting buffer size and spacing.");
-      m_ExtraFrameSize[1] = brfGeometry->SamplesPerLine;
-      m_ExtraFrameSize[0] = brfGeometry->LineCount;
+      m_ExtraFrameSize[0] = frameSize[0];
+      m_ExtraFrameSize[1] = frameSize[1];
       m_SSDecimation = brfGeometry->Decimation;
       AdjustBufferSizes();
       AdjustSpacing(true);
@@ -384,7 +384,7 @@ void vtkPlusWinProbeVideoSource::FrameCallback(int length, char* data, char* hHe
     {
       return; //the source is not defined, do not waste time on processing this frame
     }
-    if(frameSize != m_ExtraFrameSize)
+    if(frameSize != m_ExtraSources[0]->GetInputFrameSize())
     {
       LOG_INFO("SamplesPerLine has changed from " << m_ExtraFrameSize[0] << "x" << m_ExtraFrameSize[1]
           << " to " << frameSize[0] << "x" << frameSize[1] << ". Adjusting buffer size.");
@@ -458,6 +458,7 @@ void vtkPlusWinProbeVideoSource::FrameCallback(int length, char* data, char* hHe
         this->ReconstructFrame(data, m_ExtraBuffer, frameSize);
         for(unsigned i = 0; i < m_ExtraSources.size(); i++)
         {
+          frameSize[0] = m_ExtraFrameSize[0];
           if(m_ExtraSources[i]->AddItem(&m_ExtraBuffer[0],
                                         US_IMG_ORIENT_MF,
                                         frameSize, VTK_UNSIGNED_CHAR,
@@ -546,7 +547,6 @@ void vtkPlusWinProbeVideoSource::FrameCallback(int length, char* data, char* hHe
     for(unsigned i = 0; i < m_ExtraSources.size(); i++)
     {
       assert(length == frameSize[0] * frameSize[1] * sizeof(int32_t));
-
       if(m_ExtraSources[i]->AddItem(data,
                                     US_IMG_ORIENT_FM,
                                     frameSize, VTK_INT,
@@ -742,7 +742,6 @@ PlusStatus vtkPlusWinProbeVideoSource::InternalConnect()
   this->m_CustomFields["SamplingRate"].first = FRAMEFIELD_FORCE_SERVER_SEND;
   this->m_CustomFields["SamplingRate"].second = std::to_string(m_ADCfrequency);
   m_PrimaryFrameSize[0] = GetSSElementCount();
-  m_ExtraFrameSize[0] = m_PrimaryFrameSize[0];
   SetSCCompoundAngleCount(0);
 
   LOG_DEBUG("GetHandleBRFInternally: " << GetHandleBRFInternally());
@@ -844,7 +843,7 @@ PlusStatus vtkPlusWinProbeVideoSource::InternalConnect()
     SetMIsRevolving(m_MRevolvingEnabled);
     SetMPRF(m_MPRF);
     SetMAcousticLineIndex(m_MLineIndex);
-    ::SetMWidth(m_ExtraFrameSize[1]);
+    ::SetMWidth(m_ExtraFrameSize[0]);
     ::SetMAcousticLineCount(m_MAcousticLineCount);
   }
 
@@ -1288,7 +1287,7 @@ void vtkPlusWinProbeVideoSource::SetMModeEnabled(bool value)
       SetMIsRevolving(m_MRevolvingEnabled);
       SetMPRF(m_MPRF);
       SetMAcousticLineIndex(m_MLineIndex);
-      ::SetMWidth(m_ExtraFrameSize[1]);
+      ::SetMWidth(m_ExtraFrameSize[0]);
       ::SetMAcousticLineCount(m_MAcousticLineCount);
     }
     SetPendingRecreateTables(true);
@@ -1383,7 +1382,7 @@ void vtkPlusWinProbeVideoSource::SetMWidth(int value)
     int32_t mwidth = this->MWidthFromSeconds(value);
     ::SetMWidth(mwidth);
     SetPendingRecreateTables(true);
-    m_ExtraFrameSize[1] = mwidth;
+    m_ExtraFrameSize[0] = mwidth;
   }
 }
 
@@ -1392,7 +1391,7 @@ int vtkPlusWinProbeVideoSource::GetMWidth()
   int mwidthSeconds = 0;
   if(Connected)
   {
-    m_ExtraFrameSize[1] = ::GetMWidth();
+    m_ExtraFrameSize[0] = ::GetMWidth();
     mwidthSeconds = this->MSecondsFromWidth(m_ExtraFrameSize[1]);
   }
   return mwidthSeconds;
@@ -1405,14 +1404,14 @@ void vtkPlusWinProbeVideoSource::SetMWidthLines(int32_t value)
     ::SetMWidth(value);
     SetPendingRecreateTables(true);
   }
-  m_ExtraFrameSize[1] = value;
+  m_ExtraFrameSize[0] = value;
 }
 
 int32_t vtkPlusWinProbeVideoSource::GetMWidthLines()
 {
   if(Connected)
   {
-    m_ExtraFrameSize[1] = ::GetMWidth();
+    m_ExtraFrameSize[0] = ::GetMWidth();
   }
   return m_ExtraFrameSize[1];
 }
