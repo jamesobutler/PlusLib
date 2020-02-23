@@ -341,7 +341,7 @@ void vtkPlusWinProbeVideoSource::FrameCallback(int length, char* data, char* hHe
     else if(length < bSize + arfiDataSize + timeblock){
       LOG_WARNING("The size of the ARFI frame data is smaller than expected.");
     }
-    frameSize[0] = (length - bSize) / sizeof(int32_t);  // we want to include the time data to be saved
+    frameSize[0] = length / sizeof(int32_t);  // we want to include the time data to be saved
     frameSize[1] = 1;
     frameSize[2] = 1;
     if(frameSize != m_ExtraFrameSize)
@@ -523,8 +523,7 @@ void vtkPlusWinProbeVideoSource::FrameCallback(int length, char* data, char* hHe
       // need to spoof the timestamps since the arfi data comes a few seconds after the push
       double currentTime = vtkIGSIOAccurateTimer::GetSystemTime();
 
-      int bSize = m_SSDecimation * m_PrimaryFrameSize[1] * m_PrimaryFrameSize[0];
-      tempData = reinterpret_cast<int32_t*>(data + bSize);
+      tempData = reinterpret_cast<int32_t*>(data);
       if(m_ExtraSources[i]->AddItem(tempData,
                                     US_IMG_ORIENT_FM,
                                     frameSize, VTK_INT,
@@ -1518,7 +1517,10 @@ void vtkPlusWinProbeVideoSource::SetARFIEnabled(bool value)
     if(value)
     {
       m_Mode = Mode::ARFI;
-      m_ExtraFrameSize = { 1024 * 16 * 64 * 30 + (4 / 2) * 64 * 30, 1, 1 };
+      unsigned bSize = m_SSDecimation * m_PrimaryFrameSize[1] * m_PrimaryFrameSize[0];
+      unsigned arfiDataSize = 1024 * 16 * 64 * 30;
+      unsigned timeblockSize = (4 / 2) * 64 * 30;
+      m_ExtraFrameSize = { bSize + arfiDataSize + timeblockSize, 1, 1 };
       this->AdjustBufferSizes();
       std::vector<int32_t> zeroData(m_ExtraFrameSize[0] * m_ExtraFrameSize[1] * m_ExtraFrameSize[2], 0);
       // add a fake zero-filled frame immediately, because the first frame seems to get lost somehow
