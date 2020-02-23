@@ -1405,7 +1405,7 @@ int vtkPlusWinProbeVideoSource::GetMWidth()
   if(Connected)
   {
     m_ExtraFrameSize[0] = ::GetMWidth();
-    mwidthSeconds = this->MSecondsFromWidth(m_ExtraFrameSize[1]);
+    mwidthSeconds = this->MSecondsFromWidth(m_ExtraFrameSize[0]);
   }
   return mwidthSeconds;
 }
@@ -1426,7 +1426,7 @@ int32_t vtkPlusWinProbeVideoSource::GetMWidthLines()
   {
     m_ExtraFrameSize[0] = ::GetMWidth();
   }
-  return m_ExtraFrameSize[1];
+  return m_ExtraFrameSize[0];
 }
 
 void vtkPlusWinProbeVideoSource::SetMAcousticLineCount(int32_t value)
