@@ -95,7 +95,7 @@ PlusStatus vtkPlusWinProbeVideoSource::ReadConfiguration(vtkXMLDataElement* root
       int mwidthSeconds = std::stoi(mwidthSeconds_string);
       if(mwidthSeconds > 0)
       {
-        m_ExtraFrameSize[0] = this->MWidthFromSeconds(mwidthSeconds);
+        m_MWidth = this->MWidthFromSeconds(mwidthSeconds);
       }
     }
   }
@@ -122,8 +122,8 @@ PlusStatus vtkPlusWinProbeVideoSource::WriteConfiguration(vtkXMLDataElement* roo
   deviceConfig->SetIntAttribute("SpatialCompoundCount", this->GetSpatialCompoundCount());
   deviceConfig->SetIntAttribute("MPRFrequency", this->GetMPRFrequency());
   deviceConfig->SetIntAttribute("MLineIndex", this->GetMLineIndex());
-  deviceConfig->SetIntAttribute("MWidth", this->MSecondsFromWidth(this->m_ExtraFrameSize[0]));
-  deviceConfig->SetIntAttribute("MWidthLines", this->m_ExtraFrameSize[0]);
+  deviceConfig->SetIntAttribute("MWidth", this->MSecondsFromWidth(this->m_MWidth));
+  deviceConfig->SetIntAttribute("MWidthLines", this->m_MWidth);
   deviceConfig->SetIntAttribute("MAcousticLineCount", this->GetMAcousticLineCount());
   deviceConfig->SetIntAttribute("MDepth", this->GetMDepth());
   deviceConfig->SetUnsignedLongAttribute("Voltage", this->GetVoltage());
@@ -607,13 +607,14 @@ void vtkPlusWinProbeVideoSource::AdjustBufferSizes()
     }
     else if(m_Mode == Mode::M)
     {
+      frameSize[0] = m_MWidth;
       m_ExtraSources[i]->SetPixelType(VTK_UNSIGNED_CHAR);
       m_ExtraSources[i]->SetImageType(US_IMG_BRIGHTNESS);
       m_ExtraSources[i]->SetOutputImageOrientation(US_IMG_ORIENT_MF);
       m_ExtraSources[i]->SetInputImageOrientation(US_IMG_ORIENT_MF);
-      if(m_ExtraBuffer.size() != m_ExtraFrameSize[0] * m_ExtraFrameSize[1])
+      if(m_ExtraBuffer.size() != m_MWidth * m_ExtraFrameSize[1])
       {
-        m_ExtraBuffer.resize(m_ExtraFrameSize[0] * m_ExtraFrameSize[1]);
+        m_ExtraBuffer.resize(m_MWidth * m_ExtraFrameSize[1]);
         std::fill(m_ExtraBuffer.begin(), m_ExtraBuffer.end(), 0);
       }
     }
@@ -842,7 +843,7 @@ PlusStatus vtkPlusWinProbeVideoSource::InternalConnect()
     SetMIsRevolving(m_MRevolvingEnabled);
     SetMPRF(m_MPRF);
     SetMAcousticLineIndex(m_MLineIndex);
-    ::SetMWidth(m_ExtraFrameSize[0]);
+    ::SetMWidth(m_MWidth);
     ::SetMAcousticLineCount(m_MAcousticLineCount);
   }
 
@@ -1223,8 +1224,7 @@ PlusStatus vtkPlusWinProbeVideoSource::SetExtraSourceMode(Mode mode)
     SetMIsRevolving(m_MRevolvingEnabled);
     SetMPRF(m_MPRF);
     SetMAcousticLineIndex(m_MLineIndex);
-    ::SetMWidth(2000);
-    // ::SetMWidth(m_ExtraFrameSize[0]);
+    ::SetMWidth(m_MWidth);
     ::SetMAcousticLineCount(m_MAcousticLineCount);
   }
   else if (mode == Mode::ARFI)
@@ -1395,7 +1395,7 @@ void vtkPlusWinProbeVideoSource::SetMWidth(int value)
     int32_t mwidth = this->MWidthFromSeconds(value);
     ::SetMWidth(mwidth);
     SetPendingRecreateTables(true);
-    m_ExtraFrameSize[0] = mwidth;
+    m_MWidth = mwidth;
   }
 }
 
@@ -1404,8 +1404,8 @@ int vtkPlusWinProbeVideoSource::GetMWidth()
   int mwidthSeconds = 0;
   if(Connected)
   {
-    m_ExtraFrameSize[0] = ::GetMWidth();
-    mwidthSeconds = this->MSecondsFromWidth(m_ExtraFrameSize[0]);
+    m_MWidth = ::GetMWidth();
+    mwidthSeconds = this->MSecondsFromWidth(m_MWidth);
   }
   return mwidthSeconds;
 }
@@ -1417,16 +1417,16 @@ void vtkPlusWinProbeVideoSource::SetMWidthLines(int32_t value)
     ::SetMWidth(value);
     SetPendingRecreateTables(true);
   }
-  m_ExtraFrameSize[0] = value;
+  m_MWidth = value;
 }
 
 int32_t vtkPlusWinProbeVideoSource::GetMWidthLines()
 {
   if(Connected)
   {
-    m_ExtraFrameSize[0] = ::GetMWidth();
+    m_MWidth = ::GetMWidth();
   }
-  return m_ExtraFrameSize[0];
+  return m_MWidth;
 }
 
 void vtkPlusWinProbeVideoSource::SetMAcousticLineCount(int32_t value)

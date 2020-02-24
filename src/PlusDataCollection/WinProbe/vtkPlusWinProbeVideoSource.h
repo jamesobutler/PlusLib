@@ -276,6 +276,7 @@ protected:
   int32_t m_BMultiTxCount = 1;
   int32_t m_MPRF = 100;
   int32_t m_MLineIndex = 60;
+  int32_t m_MWidth = 256;
   int32_t m_MAcousticLineCount = 0;
   int32_t m_MDepth = 0;
   uint8_t m_SSDecimation = 2;
