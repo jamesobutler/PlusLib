@@ -1368,7 +1368,17 @@ PlusStatus vtkPlusCapistranoVideoSource::SetMISMode(bool mode)
     this->MISMode = mode;
     usbWriteSpecialFunction(0x6d697300, mode);
     this->BidirectionalMode = mode;
-    return PLUS_SUCCESS;
+
+    vtkPlusDataSource* aSource = NULL;
+    if (this->GetFirstActiveOutputVideoSource(aSource) != PLUS_SUCCESS)
+    {
+      LOG_ERROR("Unable to retrieve the video source in the CapistranoVideo device.");
+      return PLUS_FAIL;
+    }
+
+    // Clear buffer because the new frames that we will acquire will be of different type
+    usbClearCineBuffers();
+    aSource->Clear();
   #else
     LOG_ERROR("This method is not supported with this version of Capistrano SDK.");
     return PLUS_FAIL;
