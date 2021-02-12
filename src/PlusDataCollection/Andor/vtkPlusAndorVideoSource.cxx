@@ -135,15 +135,24 @@ PlusStatus vtkPlusAndorVideoSource::ReadConfiguration(vtkXMLDataElement* rootCon
   deviceConfig->GetVectorAttribute("OutputSpacing", 3, OutputSpacing);
   deviceConfig->GetVectorAttribute("CameraIntrinsics", 9, cameraIntrinsics);
   deviceConfig->GetVectorAttribute("DistortionCoefficients", 4, distortionCoefficients);
-  badPixelCorrection = deviceConfig->GetAttribute("BadPixelCorrection");
-  flatCorrection = deviceConfig->GetAttribute("FlatCorrection");
-  biasDarkCorrection = deviceConfig->GetAttribute("BiasDarkCorrection");
+  const char * badPixelCorrection = deviceConfig->GetAttribute("BadPixelCorrection");
+  if (badPixelCorrection)
+  {
+    this->SetBadPixelCorrectionImage(badPixelCorrection);
+  }
+  const char * flatCorrection = deviceConfig->GetAttribute("FlatCorrection");
+  if (flatCorrection)
+  {
+    this->SetFlatCorrectionImage(flatCorrection);
+  }
+  const char * biasDarkCorrection = deviceConfig->GetAttribute("BiasDarkCorrection");
+  if (biasDarkCorrection)
+  {
+    this->SetBiasDarkCorrectionImage(biasDarkCorrection);
+  }
 
   cvCameraIntrinsics = cv::Mat(3, 3, CV_64FC1, cameraIntrinsics);
   cvDistortionCoefficients = cv::Mat(1, 4, CV_64FC1, distortionCoefficients);
-  this->SetBadPixelCorrectionImage(badPixelCorrection); // load the image
-  this->SetFlatCorrectionImage(flatCorrection); // load and normalize if needed
-  this->SetBiasDarkCorrectionImage(biasDarkCorrection); // load the image
 
   return PLUS_SUCCESS;
 }
