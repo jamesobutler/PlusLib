@@ -39,6 +39,9 @@ public:
   /*! Write configuration to xml data */
   virtual PlusStatus WriteConfiguration(vtkXMLDataElement* config);
 
+  /*! Set changed imaging parameter to device */
+  PlusStatus InternalApplyImagingParameterChange() override;
+
   /* Set the transmit frequency of US probe (MHz) */
   PlusStatus SetTransmitFrequencyMHz(float frequency);
 
