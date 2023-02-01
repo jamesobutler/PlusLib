@@ -299,7 +299,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
     // Search for command
     PlusStatus status;
 
-    if (igsioCommon::IsEqualInsensitive(parameterName, GET_FREEZE))
+    if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_FREEZE))
     {
       res = device->IsFrozen() ? "True" : "False";
 
@@ -308,7 +308,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_FREEZE))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_FREEZE))
     {
       bool set = igsioCommon::IsEqualInsensitive(attribs["Value"], "true") ? true : false;
       status = device->FreezeDevice(set);
@@ -318,7 +318,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_TGC))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_TGC))
     {
       res = std::to_string(device->GetTimeGainCompensation(stoi(attribs["Index"])));
 
@@ -328,7 +328,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_TGC))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_TGC))
     {
       double tgc_value = stod(attribs["Value"]);
       int tgc_index = stoi(attribs["Index"]);
@@ -340,7 +340,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Index=\"" + attribs["Index"] + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_B_MULTIFOCAL_ZONE_COUNT))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_B_MULTIFOCAL_ZONE_COUNT))
     {
       int count = device->GetBMultiFocalZoneCount();
 
@@ -349,7 +349,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + std::to_string(count) + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, std::to_string(count));
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_B_MULTIFOCAL_ZONE_COUNT))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_B_MULTIFOCAL_ZONE_COUNT))
     {
       int32_t count = stoi(attribs["Value"]);
       status = device->SetBMultiFocalZoneCount(count);
@@ -359,7 +359,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_ALL_FOCAL_DEPTHS))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ALL_FOCAL_DEPTHS))
     {
       std::istringstream ss(attribs["Value"]);
       std::string val;
@@ -379,7 +379,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_FOCAL_DEPTH))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_FOCAL_DEPTH))
     {
       int depth_index = stoi(attribs["Index"]);
       float depth_value = stof(attribs["Value"]);
@@ -390,7 +390,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, GET_FOCAL_DEPTH))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_FOCAL_DEPTH))
     {
       int depth_index = stoi(attribs["Index"]);
       float depth_value = device->GetFocalPointDepth(depth_index);
@@ -401,7 +401,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Index=\"" + std::to_string(depth_index) + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, std::to_string(depth_value));
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_ALL_ARFI_FOCAL_DEPTHS))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ALL_ARFI_FOCAL_DEPTHS))
     {
       std::istringstream ss(attribs["Value"]);
       std::string val;
@@ -421,7 +421,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_ARFI_FOCAL_DEPTHS))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ARFI_FOCAL_DEPTHS))
     {
       int depth_index = stoi(attribs["Index"]);
       float depth_value = stof(attribs["Value"]);
@@ -432,7 +432,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, GET_ARFI_FOCAL_DEPTHS))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_ARFI_FOCAL_DEPTHS))
     {
       int depth_index = stoi(attribs["Index"]);
       float depth_value = device->GetARFIFocalPointDepth(depth_index);
@@ -443,7 +443,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Index=\"" + std::to_string(depth_index) + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, std::to_string(depth_value));
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_FIRST_GAIN_VALUE))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_FIRST_GAIN_VALUE))
     {
       res = std::to_string(device->GetFirstGainValue());
 
@@ -452,7 +452,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_FIRST_GAIN_VALUE))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_FIRST_GAIN_VALUE))
     {
       int gain_value = stoi(attribs["Value"]);
       status = device->SetFirstGainValue(gain_value);
@@ -462,7 +462,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_TGC_OVERALL_GAIN))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_TGC_OVERALL_GAIN))
     {
       res = std::to_string(device->GetOverallTimeGainCompensation());
 
@@ -471,7 +471,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_TGC_OVERALL_GAIN))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_TGC_OVERALL_GAIN))
     {
       double tgc_value = stod(attribs["Value"]);
       status = device->SetOverallTimeGainCompensation(tgc_value);
@@ -481,7 +481,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_TGC_OVERALL_GAIN))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_TGC_OVERALL_GAIN))
     {
       res = std::to_string(device->GetOverallTimeGainCompensation());
 
@@ -490,7 +490,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_TGC_OVERALL_GAIN))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_TGC_OVERALL_GAIN))
     {
       double tgc_value = stod(attribs["Value"]);
       status = device->SetOverallTimeGainCompensation(tgc_value);
@@ -500,7 +500,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, status_msg);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_SPATIAL_COMPOUND_ENABLED))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_SPATIAL_COMPOUND_ENABLED))
     {
       res = device->GetSpatialCompoundEnabled() ? "True" : "False";
 
@@ -509,7 +509,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_SPATIAL_COMPOUND_ENABLED))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_SPATIAL_COMPOUND_ENABLED))
     {
       bool set = igsioCommon::IsEqualInsensitive(attribs["Value"], "true") ? true : false;
       device->SetSpatialCompoundEnabled(set);
@@ -518,7 +518,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_SPATIAL_COMPOUND_ANGLE))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_SPATIAL_COMPOUND_ANGLE))
     {
       res = std::to_string(device->GetSpatialCompoundAngle());
 
@@ -527,7 +527,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, GET_SPATIAL_COMPOUND_COUNT))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_SPATIAL_COMPOUND_COUNT))
     {
       int count = device->GetSpatialCompoundCount();
 
@@ -536,7 +536,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + std::to_string(count) + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, std::to_string(count));
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_SPATIAL_COMPOUND_COUNT))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_SPATIAL_COMPOUND_COUNT))
     {
       int32_t count = stoi(attribs["Value"]);
       device->SetSpatialCompoundCount(count);
@@ -545,7 +545,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_MMODE_ENABLED))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_MMODE_ENABLED))
     {
       res = device->GetMModeEnabled() ? "True" : "False";
 
@@ -554,7 +554,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_MMODE_ENABLED))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_MMODE_ENABLED))
     {
       bool set = igsioCommon::IsEqualInsensitive(attribs["Value"], "true") ? true : false;
       device->SetMModeEnabled(set);
@@ -563,7 +563,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_RF_MODE_ENABLED))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_RF_MODE_ENABLED))
     {
       bool set = igsioCommon::IsEqualInsensitive(attribs["Value"], "true") ? true : false;
       device->SetBRFEnabled(set);
@@ -572,7 +572,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_MPR_FREQUENCY))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_MPR_FREQUENCY))
     {
       res = std::to_string(device->GetMPRFrequency());
 
@@ -581,7 +581,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_MPR_FREQUENCY))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_MPR_FREQUENCY))
     {
       int32_t frequency = stoi(attribs["Value"]);
       device->SetMPRFrequency(frequency);
@@ -590,7 +590,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_M_LINE_INDEX))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_M_LINE_INDEX))
     {
       res = std::to_string(device->GetMLineIndex());
 
@@ -599,7 +599,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Index=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_M_LINE_INDEX))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_M_LINE_INDEX))
     {
       int32_t index = stoi(attribs["Index"]);
       device->SetMLineIndex(index);
@@ -608,7 +608,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_M_LINE_COUNT))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_M_LINE_COUNT))
     {
       res = std::to_string(device->GetMAcousticLineCount());
 
@@ -617,7 +617,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_M_LINE_COUNT))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_M_LINE_COUNT))
     {
       int32_t count = stoi(attribs["Value"]);
       device->SetMAcousticLineCount(count);
@@ -626,7 +626,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_M_WIDTH))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_M_WIDTH))
     {
       res = std::to_string(device->GetMWidth());
 
@@ -635,7 +635,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_M_WIDTH))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_M_WIDTH))
     {
       int32_t width = stoi(attribs["Value"]);
       device->SetMWidth(width);
@@ -644,7 +644,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_M_DEPTH))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_M_DEPTH))
     {
       res = std::to_string(device->GetMDepth());
 
@@ -653,7 +653,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_M_DEPTH))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_M_DEPTH))
     {
       int32_t depth = stoi(attribs["Value"]);
       device->SetMDepth(depth);
@@ -662,7 +662,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_DECIMATION))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_DECIMATION))
     {
       int32_t val = stoi(attribs["Value"]);
       status = device->SetSSDecimation(val);
@@ -671,7 +671,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       std::string status_msg = status == PLUS_SUCCESS ? "SUCCESS" : "FAIL";
       resultString += " Success=\"" + success + "\"";
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_B_FRAME_RATE_LIMIT))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_B_FRAME_RATE_LIMIT))
     {
       res = std::to_string(device->GetBFrameRateLimit());
 
@@ -680,7 +680,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_B_FRAME_RATE_LIMIT))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_B_FRAME_RATE_LIMIT))
     {
       int32_t val = stoi(attribs["Value"]);
       device->SetBFrameRateLimit(val);
@@ -689,7 +689,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_B_HARMONIC_ENABLED))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_B_HARMONIC_ENABLED))
     {
       res = device->GetBHarmonicEnabled() ? "True" : "False";
 
@@ -698,7 +698,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_B_HARMONIC_ENABLED))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_B_HARMONIC_ENABLED))
     {
       bool set = igsioCommon::IsEqualInsensitive(attribs["Value"], "true") ? true : false;
       device->SetBHarmonicEnabled(set);
@@ -707,7 +707,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_TRANSDUCER_INTERNAL_ID))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_TRANSDUCER_INTERNAL_ID))
     {
       res = std::to_string(device->GetTransducerInternalID());
 
@@ -716,7 +716,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_ARFI_ENABLED))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_ARFI_ENABLED))
     {
       res = device->GetARFIEnabled() ? "True" : "False";
 
@@ -725,7 +725,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, SET_ARFI_ENABLED))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ARFI_ENABLED))
     {
       bool set = igsioCommon::IsEqualInsensitive(attribs["Value"], "true") ? true : false;
       device->SetARFIEnabled(set);
@@ -734,7 +734,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_ARFI_START_SAMPLE))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ARFI_START_SAMPLE))
     {
       int32_t val = stoi(attribs["Value"]);
       device->SetARFIStartSample(val);
@@ -743,7 +743,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_ARFI_START_SAMPLE))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_ARFI_START_SAMPLE))
     {
       res = std::to_string(device->GetARFIStartSample());
 
@@ -752,7 +752,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_ARFI_STOP_SAMPLE))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ARFI_STOP_SAMPLE))
     {
       int32_t val = stoi(attribs["Value"]);
       device->SetARFIStopSample(val);
@@ -761,7 +761,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_ARFI_STOP_SAMPLE))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_ARFI_STOP_SAMPLE))
     {
       res = std::to_string(device->GetARFIStopSample());
 
@@ -770,7 +770,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_ARFI_PRE_PUSH_LINE_REPEAT_COUNT))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ARFI_PRE_PUSH_LINE_REPEAT_COUNT))
     {
       int32_t val = stoi(attribs["Value"]);
       status = device->SetARFIPrePushLineRepeatCount(val);
@@ -780,7 +780,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, success);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_ARFI_PRE_PUSH_LINE_REPEAT_COUNT))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_ARFI_PRE_PUSH_LINE_REPEAT_COUNT))
     {
       res = std::to_string(device->GetARFIPrePushLineRepeatCount());
 
@@ -789,7 +789,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_ARFI_POST_PUSH_LINE_REPEAT_COUNT))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ARFI_POST_PUSH_LINE_REPEAT_COUNT))
     {
       int32_t val = stoi(attribs["Value"]);
       status = device->SetARFIPostPushLineRepeatCount(val);
@@ -799,7 +799,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, success);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_ARFI_POST_PUSH_LINE_REPEAT_COUNT))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_ARFI_POST_PUSH_LINE_REPEAT_COUNT))
     {
       res = std::to_string(device->GetARFIPostPushLineRepeatCount());
 
@@ -808,7 +808,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_ARFI_LINE_TIMER))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ARFI_LINE_TIMER))
     {
       int32_t val = stoi(attribs["Value"]);
       status = device->SetARFIPostPushLineRepeatCount(val);
@@ -818,7 +818,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"" + success + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, success);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_ARFI_LINE_TIMER))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_ARFI_LINE_TIMER))
     {
       res = std::to_string(device->GetARFIPostPushLineRepeatCount());
 
@@ -827,7 +827,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, SET_ARFI_PUSH_CONFIG))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::SET_ARFI_PUSH_CONFIG))
     {
       device->SetARFIPushConfigurationString(attribs["Value"]);
 
@@ -835,7 +835,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Success=\"true\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, "SUCCESS");
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_ARFI_PUSH_CONFIG))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_ARFI_PUSH_CONFIG))
     {
       res = device->GetARFIPushConfigurationString();
 
@@ -844,7 +844,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, GET_FPGA_REV_DATE_STRING))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::GET_FPGA_REV_DATE_STRING))
     {
       res = device->GetFPGARevDateString();
 
@@ -853,7 +853,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if (igsioCommon::IsEqualInsensitive(parameterName, IS_SCANNING))
+    else if (igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::IS_SCANNING))
     {
       res = device->IsScanning() ? "True" : "False";
 
@@ -862,7 +862,7 @@ PlusStatus vtkPlusWinProbeCommand::Execute()
       resultString += " Value=\"" + res + "\"";
       metaData[parameterName] = std::make_pair(IANA_TYPE_US_ASCII, res);
     }
-    else if(igsioCommon::IsEqualInsensitive(parameterName, UV_SEND_COMMAND))
+    else if(igsioCommon::IsEqualInsensitive(parameterName, vtkPlusWinProbeVideoSource::UV_SEND_COMMAND))
     {
       status = device->SendCommand(attribs["Value"].c_str());
 

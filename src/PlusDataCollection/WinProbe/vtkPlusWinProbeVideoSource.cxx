@@ -19,6 +19,66 @@ See License.txt for details.
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkPlusWinProbeVideoSource);
 
+//----------------------------------------------------------------------------
+// Define command strings
+const char* vtkPlusWinProbeVideoSource::SET_FREEZE                   = "SetFrozen";
+const char* vtkPlusWinProbeVideoSource::GET_FREEZE                   = "GetFrozen";
+const char* vtkPlusWinProbeVideoSource::SET_TGC                      = "SetTGC";
+const char* vtkPlusWinProbeVideoSource::GET_TGC                      = "GetTGC";
+const char* vtkPlusWinProbeVideoSource::SET_ALL_FOCAL_DEPTHS         = "SetAllFocalDepths";
+const char* vtkPlusWinProbeVideoSource::SET_FOCAL_DEPTH              = "SetFocalDepth";
+const char* vtkPlusWinProbeVideoSource::GET_FOCAL_DEPTH              = "GetFocalDepth";
+const char* vtkPlusWinProbeVideoSource::SET_ALL_ARFI_FOCAL_DEPTHS    = "SetAllARFIFocalDepths";
+const char* vtkPlusWinProbeVideoSource::SET_ARFI_FOCAL_DEPTHS        = "SetARFIFocalDepth";
+const char* vtkPlusWinProbeVideoSource::GET_ARFI_FOCAL_DEPTHS        = "GetARFIFocalDepth";
+const char* vtkPlusWinProbeVideoSource::SET_B_MULTIFOCAL_ZONE_COUNT  = "SetBMultifocalZoneCount";
+const char* vtkPlusWinProbeVideoSource::GET_B_MULTIFOCAL_ZONE_COUNT  = "GetBMultifocalZoneCount";
+const char* vtkPlusWinProbeVideoSource::SET_FIRST_GAIN_VALUE         = "SetFirstGainValue";
+const char* vtkPlusWinProbeVideoSource::GET_FIRST_GAIN_VALUE         = "GetFirstGainValue";
+const char* vtkPlusWinProbeVideoSource::SET_TGC_OVERALL_GAIN         = "SetTGCOverallGain";
+const char* vtkPlusWinProbeVideoSource::GET_TGC_OVERALL_GAIN         = "GetTGCOverallGain";
+const char* vtkPlusWinProbeVideoSource::SET_SPATIAL_COMPOUND_ENABLED = "SetSpatialCompoundEnabled";
+const char* vtkPlusWinProbeVideoSource::GET_SPATIAL_COMPOUND_ENABLED = "GetSpatialCompoundEnabled";
+const char* vtkPlusWinProbeVideoSource::GET_SPATIAL_COMPOUND_ANGLE   = "GetSpatialCompoundAngle";
+const char* vtkPlusWinProbeVideoSource::SET_SPATIAL_COMPOUND_COUNT   = "SetSpatialCompoundCount";
+const char* vtkPlusWinProbeVideoSource::GET_SPATIAL_COMPOUND_COUNT   = "GetSpatialCompoundCount";
+const char* vtkPlusWinProbeVideoSource::SET_MMODE_ENABLED            = "SetMModeEnabled";
+const char* vtkPlusWinProbeVideoSource::GET_MMODE_ENABLED            = "GetMModeEnabled";
+const char* vtkPlusWinProbeVideoSource::SET_RF_MODE_ENABLED          = "SetRfModeEnabled";
+const char* vtkPlusWinProbeVideoSource::SET_MPR_FREQUENCY            = "SetMPRFrequency";
+const char* vtkPlusWinProbeVideoSource::GET_MPR_FREQUENCY            = "GetMPRFrequency";
+const char* vtkPlusWinProbeVideoSource::SET_M_LINE_INDEX             = "SetMLineIndex";
+const char* vtkPlusWinProbeVideoSource::GET_M_LINE_INDEX             = "GetMLineIndex";
+const char* vtkPlusWinProbeVideoSource::SET_M_LINE_COUNT             = "SetMLineCount";
+const char* vtkPlusWinProbeVideoSource::GET_M_LINE_COUNT             = "GetMLineCount";
+const char* vtkPlusWinProbeVideoSource::SET_M_WIDTH                  = "SetMWidth";
+const char* vtkPlusWinProbeVideoSource::GET_M_WIDTH                  = "GetMWidth";
+const char* vtkPlusWinProbeVideoSource::SET_M_DEPTH                  = "SetMDepth";
+const char* vtkPlusWinProbeVideoSource::GET_M_DEPTH                  = "GetMDepth";
+const char* vtkPlusWinProbeVideoSource::SET_DECIMATION               = "SetDecimation";
+const char* vtkPlusWinProbeVideoSource::SET_B_FRAME_RATE_LIMIT       = "SetBFrameRateLimit";
+const char* vtkPlusWinProbeVideoSource::GET_B_FRAME_RATE_LIMIT       = "GetBFrameRateLimit";
+const char* vtkPlusWinProbeVideoSource::SET_B_HARMONIC_ENABLED       = "SetBHarmonicEnabled";
+const char* vtkPlusWinProbeVideoSource::GET_B_HARMONIC_ENABLED       = "GetBHarmonicEnabled";
+const char* vtkPlusWinProbeVideoSource::GET_TRANSDUCER_INTERNAL_ID   = "GetTransducerInternalID";
+const char* vtkPlusWinProbeVideoSource::SET_ARFI_ENABLED             = "SetARFIEnabled";
+const char* vtkPlusWinProbeVideoSource::GET_ARFI_ENABLED             = "GetARFIEnabled";
+const char* vtkPlusWinProbeVideoSource::SET_ARFI_START_SAMPLE        = "SetARFIStartSample";
+const char* vtkPlusWinProbeVideoSource::GET_ARFI_START_SAMPLE        = "GetARFIStartSample";
+const char* vtkPlusWinProbeVideoSource::SET_ARFI_STOP_SAMPLE         = "SetARFIStopSample";
+const char* vtkPlusWinProbeVideoSource::GET_ARFI_STOP_SAMPLE         = "GetARFIStopSample";
+const char* vtkPlusWinProbeVideoSource::SET_ARFI_PRE_PUSH_LINE_REPEAT_COUNT  = "SetARFIPrePushLineRepeatCount";
+const char* vtkPlusWinProbeVideoSource::GET_ARFI_PRE_PUSH_LINE_REPEAT_COUNT  = "GetARFIPrePushLineRepeatCount";
+const char* vtkPlusWinProbeVideoSource::SET_ARFI_POST_PUSH_LINE_REPEAT_COUNT = "SetARFIPostPushLineRepeatCount";
+const char* vtkPlusWinProbeVideoSource::GET_ARFI_POST_PUSH_LINE_REPEAT_COUNT = "GetARFIPostPushLineRepeatCount";
+const char* vtkPlusWinProbeVideoSource::SET_ARFI_LINE_TIMER          = "SetARFILineTimer";
+const char* vtkPlusWinProbeVideoSource::GET_ARFI_LINE_TIMER          = "GetARFILineTimer";
+const char* vtkPlusWinProbeVideoSource::SET_ARFI_PUSH_CONFIG         = "SetARFIPushConfigurationString";
+const char* vtkPlusWinProbeVideoSource::GET_ARFI_PUSH_CONFIG         = "GetARFIPushConfigurationString";
+const char* vtkPlusWinProbeVideoSource::GET_FPGA_REV_DATE_STRING     = "GetFPGARevDateString";
+const char* vtkPlusWinProbeVideoSource::UV_SEND_COMMAND              = "UVSendCommand";
+const char* vtkPlusWinProbeVideoSource::IS_SCANNING                  = "IsScanning";
+
 int32_t focalCountFromDepthsArray(float* depths, unsigned arraySize)
 {
   std::vector<float> nonZeroes;
