@@ -1068,11 +1068,11 @@ PlusStatus vtkPlusWinProbeVideoSource::SetTransmitFrequencyMHz(float frequency)
   m_Frequency = frequency;
   if(Connected)
   {
-    ::SetTxFreq(frequency);
+    ::SetTxTxFrequency(frequency);
     SetPendingRecreateTables(true);
 
     //what we requested might be only approximately satisfied
-    m_Frequency = ::GetTxFreq();
+    m_Frequency = ::GetTxTxFrequency();
   }
   return PLUS_SUCCESS;
 }
@@ -1082,7 +1082,7 @@ float vtkPlusWinProbeVideoSource::GetTransmitFrequencyMHz()
 {
   if(Connected)
   {
-    m_Frequency = ::GetTxFreq();
+    m_Frequency = ::GetTxTxFrequency();
   }
   return m_Frequency;
 }
@@ -1904,7 +1904,10 @@ std::string vtkPlusWinProbeVideoSource::GetARFIPushConfigurationString()
 {
   if(Connected)
   {
-    m_ARFIPushConfigurationString = WPGetARFIPushConfigurationString();
+    char* temp = new char[50];
+    WPGetARFIPushConfigurationString(temp);
+    m_ARFIPushConfigurationString.assign(temp);
+    delete[] temp;
   }
   return m_ARFIPushConfigurationString;
 }
@@ -1912,7 +1915,10 @@ std::string vtkPlusWinProbeVideoSource::GetARFIPushConfigurationString()
 //----------------------------------------------------------------------------
 std::string vtkPlusWinProbeVideoSource::GetFPGARevDateString()
 {
-  m_FPGAVersion = WPGetFPGARevDateString();
+  char* temp = new char[20];
+  WPGetFPGARevDateString(temp);
+  m_FPGAVersion.assign(temp);
+  delete[] temp;
   return m_FPGAVersion;
 }
 
