@@ -2136,15 +2136,13 @@ PlusStatus vtkPlusWinProbeVideoSource::ARFIPush(uint8_t maximumVoltage /* = 50 *
     }
 
     // Mitigate risk of burning out probes with high voltage pushes
-    // and ensure we're using the voltage that we think we are
-    uint8_t cappedVoltage = this->GetVoltage();
-    if (cappedVoltage > maximumVoltage)
+    uint8_t currentVoltage = this->GetVoltage();
+    if (currentVoltage > maximumVoltage)
     {
-      LOG_WARNING("Voltage was higher than 50V before sending ARFI push. Capping voltage to " << std::to_string(maximumVoltage) << "V.");
-      cappedVoltage = maximumVoltage;
+      LOG_WARNING("Voltage was higher than " << maximumVoltage << "V before sending ARFI push. Capping voltage to " << maximumVoltage << "V.");
+      this->SetVoltage(maximumVoltage);
+      this->ImagingParameters->SetProbeVoltage(maximumVoltage);
     }
-    this->SetVoltage(cappedVoltage);
-    this->ImagingParameters->SetProbeVoltage(cappedVoltage);
 
     ::ARFIPush();
     return PLUS_SUCCESS;
