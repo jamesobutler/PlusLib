@@ -1625,6 +1625,11 @@ PlusStatus vtkPlusWinProbeVideoSource::SetExtraSourceMode(Mode mode)
         LOG_WARNING("Success adding fake zeros item to ARFI video source ");
       }
     }
+    SetDigitalGain(7);
+    SetADCACTIVE_TERMINATION_INDIVIDUAL_RESISTOR_ENABLE(true);
+    SetADCACTIVE_TERMINATION_INDIVIDUAL_RESISTOR_CNTL(16);
+    SetADCLNA_GAIN(1);
+    SetADCLNA_INPUT_CLAMP_SETTING(1);
   }
   SetPendingRecreateTables(true);
   LOG_INFO("Mode changed to: " << this->ModeToString(mode));
